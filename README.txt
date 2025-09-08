@@ -1,6 +1,6 @@
-This python application is created to configure the network of a raspberry pi using a internet device such as a phone of computer.
+This python application is created to configure the network of a raspberry pi. 
 
-The raspberry pi will be act as a hotspot for 3 mins when it boots up and allow user to connect it and access the webpage to submit the network configuration via the webpage.
+The raspberry pi will be act as a hotspot for 3 mins when it boots up. During this time, user can connect to the raspberry pi hotspot and access the network configuration webpage 192.168.50.1:80 via a phone or computer.
 
 BOOT → ap_then_sta.service → ap_then_sta.sh
     |
@@ -11,7 +11,7 @@ BOOT → ap_then_sta.service → ap_then_sta.sh
            └─> Stop AP
            └─> Switch to STA mode (wpa_supplicant)
 
-
+Below are the files associated for hosting this application.
 
 The hosting of the webpage is using the systemctl. Here is the .service file associate for running the webpage.
 
