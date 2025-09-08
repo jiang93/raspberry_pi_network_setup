@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <title>Raspberry Pi Network Setup Error Page</title>
+        <!-- Boostrap v5.3 -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+        <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    </head>
+    <body>
+        <div class="container">
+            <h4 class="text-center">Raspberry Pi Network Configuration Error</h4>
+            <br>
+            <br>
+            <!-- Request post and handle by /configure -->
+            <div class="row justify-content-center">
+            <div class="col-md-6">
+                <p>
+                Unable to apply the network configuration. Please double-check the settings and try again.<br>
+                If you continue to experience this issue, you may contact the engineer for assistance.
+                </p>
+            </div>
+        </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <title>Raspberry Pi Network Setup Page</title>
+        <!-- Boostrap v5.3 -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+        <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+        <!-- Custom javaScript -->
+        <script>
+            function updateOnSelectionChange() {
+                const interfaceType = document.getElementById("interface_type").value;
+                const ipMode = document.getElementById("ip_mode").value;
+                const keyMgmt = document.getElementById("key_mgmt").value;
+
+                document.getElementById("ssid_div").style.display = "none";
+                document.getElementById("password_div").style.display = "none";
+                document.getElementById("ip_div").style.display = "none";
+                document.getElementById("gateway_div").style.display = "none";
+                document.getElementById("key_div").style.display = "none";
+                document.getElementById("identity_div").style.display = "none";
+
+                if (interfaceType == "ethernet" && ipMode == "static") {
+                    document.getElementById("ip_div").style.display = "block";
+                    document.getElementById("gateway_div").style.display = "block";
+                    
+                    document.getElementById("static_ip").required = true;
+                    document.getElementById("gateway").required = true;
+                }
+
+                if (interfaceType === "wifi") {
+                    document.getElementById("ssid_div").style.display = "block";
+                    document.getElementById("password_div").style.display = "block";
+                    document.getElementById("key_div").style.display = "block";
+
+                    document.getElementById("ssid").required = true;
+                    document.getElementById("password").required = true;
+
+                    if (ipMode === "static") {
+                        document.getElementById("ip_div").style.display = "block";
+                        document.getElementById("gateway_div").style.display = "block";
+
+                        document.getElementById("static_ip").required = true;
+                        document.getElementById("gateway").required = true;
+                    }
+
+                    if (keyMgmt === "WPA-EAP") {
+                        document.getElementById("identity_div").style.display = "block";
+
+                        document.getElementById("identity").required = true;
+
+                    }
+                }
+            }
+
+            function submitMsg() {
+                alert("Configuration applied!")
+                return true
+            }
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <h4 class="text-center">Raspberry Pi Network Configuration</h4>
+            <br>
+            <br>
+            <!-- Request post and handle by /configure -->
+            <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form action="/configure" method="POST" onsubmit="return submitMsg()">
+                    <div class="mb-3">
+                        <label for="interface_type" class="form-label">Network Interface:</label>
+                        <select class="form-select" id="interface_type" name="interface_type" onchange="updateOnSelectionChange()">
+                            <option value="ethernet" selected>Ethernet</option>
+                            <option value = "wifi" >Wi-Fi</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ip_mode" class="form-label">IP Configuration Method:</label>
+                        <select class="form-select" id="ip_mode" name="ip_mode" onchange="updateOnSelectionChange()">
+                            <option value="dynamic" selected>Dynamic IP</option>
+                            <option value = "static">Static IP</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="ssid_div" style="display: none;">
+                        <label for="ssid" class="form-label">SSID:</label>
+                        <input type="text" class="form-control" id="ssid" name="ssid">
+                    </div>
+                    <div class="mb-3" id="password_div" style="display: none;">
+                        <label for="password" class="form-label">Password:</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+                    <div class="mb-3" id="ip_div" style="display: none;">
+                        <label for="static_ip" class="form-label">IP Address:</label>
+                        <input type="text" class="form-control" id="static_ip" name="static_ip" placeholder="e.g. 192.168.1.100/24">
+                    </div>
+                    <div class="mb-3" id="gateway_div" style="display: none;">
+                            <label for="gateway" class="form-label">Gateway:</label>
+                            <input type="text" class="form-control" id="gateway" name="gateway" placeholder="e.g. 192.168.1.1">
+                    </div>
+                    <div class="mb-3" id="key_div" style="display: none;">
+                        <label for="key_mgmt" class="form-label">Network Security Type:</label>
+                        <select id="key_mgmt" class="form-control" id="key_mgmt" name="key_mgmt" onchange="updateOnSelectionChange()">
+                            <option value="WPA-PSK" selected>WPA-PSK</option>
+                            <option value="WPA-EAP">WPA-EAP</option>
+                            <option value="SAE">SAE</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="identity_div" style="display: none;">
+                        <label for="identity" class="form-label">Identity (for WPA-EAP only):</label>
+                        <input type="text" class="form-control" id="identity" name="identity">
+                    </div>
+                    <input type="submit" class="form-control btn btn-secondary" value="Apply Configuration">
+                </form>
+            </div>
+        </div>
+        </div>
+    </body>
+</html>
