@@ -1,4 +1,4 @@
-This application is created to configure the network of a raspberry pi using a internet device such as a phone of computer.
+This python application is created to configure the network of a raspberry pi using a internet device such as a phone of computer.
 
 The raspberry pi will be act as a hotspot for 3 mins when it boots up and allow user to connect it and access the webpage to submit the network configuration via the webpage.
 
