@@ -13,7 +13,7 @@ BOOT → ap_then_sta.service → ap_then_sta.sh
 
 Below are the files associated for hosting this application.
 
-The hosting of the webpage is using the systemctl. Here is the .service file associate for running the webpage.
+The hosting of the webpage is using the systemctl. Here are the .service and .sh files associate for running the network configuration webpage.
 
 package needed:
 1. sudo apt install dnsmasq
