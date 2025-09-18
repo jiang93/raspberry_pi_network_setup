@@ -168,7 +168,7 @@ while true; do
 done
 ========================================
 
-/etc/systemd/system/ap_then_sta.service
+# /etc/systemd/system/ap_then_sta.service
 ========================================
 # /etc/systemd/system/ap_then_sta.service
 [Unit]
