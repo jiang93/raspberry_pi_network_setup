@@ -21,8 +21,9 @@ package needed:
 
 /etc/dnsmasq.conf
 ========================================
-dhcp-range=interface=wlan0
-192.168.50.2,192.168.50.100,255.255.255.0,365d
+interface=wlan0
+dhcp-range=192.168.50.2,192.168.50.100,255.255.255.0,365d
+
 ========================================
 
 /etc/hostapd/hostapd.conf
@@ -38,12 +39,13 @@ ignore_broadcast_ssid=0
 ========================================
 
 /etc/network/interfaces
-
+========================================
 # WiFi AP Configuration
 allow-hotplug wlan0
 iface wlan0 inet static
 address 192.168.50.1
 netmask 255.255.255.0
+========================================
 
 source /etc/network/interfaces.d/*
 
@@ -65,9 +67,7 @@ WantedBy=multi-user.target
 ========================================
 
 /usr/local/bin/ap_then_sta.sh
-
 ========================================
-
 #!/bin/bash
 
 AP_INTERFACE="wlan0"
@@ -170,9 +170,7 @@ done
 ========================================
 
 /etc/systemd/system/ap_then_sta.service
-
 ========================================
-
 # /etc/systemd/system/ap_then_sta.service
 [Unit]
 Description=Start AP then fallback to STA
