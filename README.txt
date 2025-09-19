@@ -170,7 +170,6 @@ done
 
 # /etc/systemd/system/ap_then_sta.service
 ========================================
-# /etc/systemd/system/ap_then_sta.service
 [Unit]
 Description=Start AP then fallback to STA
 After=network.target
@@ -184,4 +183,7 @@ RemainAfterExit=no
 WantedBy=multi-user.target
 
 ========================================
+
+sudo systemctl daemon-reexec
+sudo systemctl enable ap_then_sta.service
 
