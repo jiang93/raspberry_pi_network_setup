@@ -18,6 +18,8 @@ The hosting of the webpage is using the systemctl. Here are the .service and .sh
 package needed:
 1. sudo apt install dnsmasq
 2. sudo apt install hostapd
+3. sudo systemctl unmask dnsmasq
+4. sudo systemctl unmask hostapd
 
 /etc/dnsmasq.conf
 ========================================
