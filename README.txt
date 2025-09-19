@@ -41,17 +41,6 @@ wmm_enabled=0
 ignore_broadcast_ssid=0
 ========================================
 
-/etc/network/interfaces
-========================================
-source /etc/network/interfaces.d/*
-
-# WiFi AP Configuration
-allow-hotplug wlan0
-iface wlan0 inet static
-address 192.168.50.1
-netmask 255.255.255.0
-========================================
-
 # /etc/systemd/system/wifi_setup.service
 ========================================
 [Unit]
