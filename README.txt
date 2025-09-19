@@ -173,7 +173,8 @@ while true; do
     sleep $CHECK_INTERVAL
 done
 ========================================
-
+sudo chmod +x /usr/local/bin/ap_then_sta.sh
+========================================
 # /etc/systemd/system/ap_then_sta.service
 ========================================
 [Unit]
