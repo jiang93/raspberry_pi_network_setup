@@ -70,7 +70,7 @@ WantedBy=multi-user.target
 #!/bin/bash
 
 AP_INTERFACE="wlan0"
-AP_IP="192.168.50.1/24"
+AP_IP="192.168.90.1/24"
 WPA_CONF="/etc/wpa_supplicant/wpa_supplicant.conf"
 WAIT_LIMIT=120
 CHECK_INTERVAL=5
@@ -78,6 +78,9 @@ CHECK_INTERVAL=5
 echo "[+] Configuring $AP_INTERFACE as Access Point..."
 
 # Set interface to AP mode
+systemctl stop dhcpcd
+
+ip addr flush dev $AP_INTERFACE
 ip link set $AP_INTERFACE down
 iw dev $AP_INTERFACE set type __ap
 ip link set $AP_INTERFACE up
@@ -125,14 +128,17 @@ if [ "$CLIENT_CONNECTED" = false ]; then
     ip link set $AP_INTERFACE down
     iw dev $AP_INTERFACE set type managed
     ip link set $AP_INTERFACE up
+    sleep 3
 
     echo "[*] Connecting to Wi-Fi using wpa_supplicant..."
     #sudo wpa_supplicant -B -i $AP_INTERFACE -c $WPA_CONF
     systemctl restart wpa_supplicant
     sleep 3
+    wpa_cli -i wlan0 reconfigure
+    sleep 3
 
     echo "[*] Requesting IP address..."
-    systemctl restart dhcpcd
+    systemctl start dhcpcd
     sleep 3
 
     echo "[✓] STA mode active."
@@ -163,7 +169,7 @@ while true; do
         echo "[*] Requesting IP address..."
         systemctl restart dhcpcd
         sleep 3
-
+    fi
     sleep $CHECK_INTERVAL
 done
 ========================================
