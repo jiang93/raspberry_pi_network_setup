@@ -24,7 +24,7 @@ package needed:
 /etc/dnsmasq.conf
 ========================================
 interface=wlan0
-dhcp-range=192.168.50.2,192.168.50.100,255.255.255.0,365d
+dhcp-range=192.168.40.2,192.168.40.100,255.255.255.0,365d
 
 ========================================
 
@@ -35,6 +35,7 @@ driver=nl80211
 ssid=SEAL_Setup
 hw_mode=g
 channel=6
+country_code=SG
 auth_algs=1
 wmm_enabled=0
 ignore_broadcast_ssid=0
@@ -72,7 +73,7 @@ WantedBy=multi-user.target
 #!/bin/bash
 
 AP_INTERFACE="wlan0"
-AP_IP="192.168.90.1/24"
+AP_IP="192.168.40.1/24"
 WPA_CONF="/etc/wpa_supplicant/wpa_supplicant.conf"
 WAIT_LIMIT=120
 CHECK_INTERVAL=5
