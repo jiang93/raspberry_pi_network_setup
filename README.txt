@@ -1,34 +1,35 @@
 This python application is created to configure the network of a raspberry pi. 
 
-The raspberry pi will be act as a hotspot for 3 mins when it boots up. During this time, user can connect to the raspberry pi hotspot and access the network configuration webpage 192.168.50.1:80 via a phone or computer.
+The raspberry pi will be act as a hotspot for 3 mins when it boots up. During this time, user can connect to the raspberry pi hotspot and access the network configuration webpage 192.168.40.1 via a phone or computer.
 
 BOOT → ap_then_sta.service → ap_then_sta.sh
     |
-    ├─> Sets AP mode (hostapd + dnsmasq + Flask UI)
-    ├─> Waits 3 minutes for user to connect
+    ├─> Enable AP mode (hostapd + dnsmasq + Flask UI)
+    ├─> Waits 3 minutes for user connection
+    ├─> Writes user input to specific files 
     │
-    └─> If no user connected:
+    └─> If no user connects or user disconnects:
            └─> Stop AP
-           └─> Switch to STA mode (wpa_supplicant)
+           └─> Switch to STA mode
 
 Below are the files associated for hosting this application.
 
-The hosting of the webpage is using the systemctl. Here are the .service and .sh files associate for running the network configuration webpage.
+The hosting of the webpage is using the systemd. Here are the .service and .sh files associate for running the network configuration webpage.
 
 package needed:
 1. sudo apt install dnsmasq
 2. sudo apt install hostapd
-3. sudo systemctl unmask dnsmasq
-4. sudo systemctl unmask hostapd
+3. sudo systemctl unmask dnsmasq && sudo systemctl disable dnsmasq
+4. sudo systemctl unmask hostapd && sudo systemctl disable hostapd
 
-/etc/dnsmasq.conf
+#/etc/dnsmasq.conf#
 ========================================
 interface=wlan0
 dhcp-range=192.168.40.2,192.168.40.100,255.255.255.0,365d
 
 ========================================
 
-/etc/hostapd/hostapd.conf
+#/etc/hostapd/hostapd.conf#
 ========================================
 interface=wlan0
 driver=nl80211
@@ -41,7 +42,7 @@ wmm_enabled=0
 ignore_broadcast_ssid=0
 ========================================
 
-# /etc/systemd/system/wifi_setup.service
+#/etc/systemd/system/wifi_setup.service#
 ========================================
 [Unit]
 Description=WiFi Setup Web Interface
@@ -57,7 +58,7 @@ User=root
 WantedBy=multi-user.target
 ========================================
 
-/usr/local/bin/ap_then_sta.sh
+#/usr/local/bin/ap_then_sta.sh#
 ========================================
 #!/bin/bash
 
@@ -165,9 +166,11 @@ while true; do
     sleep $CHECK_INTERVAL
 done
 ========================================
+
 sudo chmod +x /usr/local/bin/ap_then_sta.sh
 ========================================
-# /etc/systemd/system/ap_then_sta.service
+
+#/etc/systemd/system/ap_then_sta.service#
 ========================================
 [Unit]
 Description=Start AP then fallback to STA
@@ -182,7 +185,6 @@ RemainAfterExit=no
 WantedBy=multi-user.target
 
 ========================================
-
 sudo systemctl daemon-reexec
 sudo systemctl enable ap_then_sta.service
 
