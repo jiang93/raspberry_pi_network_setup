@@ -2,15 +2,18 @@ This python application is created to configure the network of a raspberry pi.
 
 The raspberry pi will be act as a hotspot for 3 mins when it boots up. During this time, user can connect to the raspberry pi hotspot and access the network configuration webpage 192.168.40.1 via a phone or computer.
 
-BOOT → ap_then_sta.service → ap_then_sta.sh
+BOOT → ap_then_sta.service → ap_then_sta.sh → startup.sh
     |
     ├─> Enable AP mode (hostapd + dnsmasq + Flask UI)
     ├─> Waits 3 minutes for user connection
     ├─> Writes user input to specific files 
     │
-    └─> If no user connects or user disconnects:
-           └─> Stop AP
-           └─> Switch to STA mode
+    └─> If no user connects, or if the user disconnects from the hotspot:
+            └─> Stop AP
+            └─> Switch to STA mode
+            │
+            └─> If network connection is established successfully:
+                └─> Execute python program 
 
 Below are the files associated for hosting this application.
 
@@ -188,3 +191,60 @@ WantedBy=multi-user.target
 sudo systemctl daemon-reexec
 sudo systemctl enable ap_then_sta.service
 
+#/etc/systemd/system/startup.service#
+========================================
+[Unit]
+Description=Start Python Program in tmux
+After=ap_then_sta.service
+Requires=ap_then_sta.service
+
+[Service]
+Type=oneshot
+User=pi
+ExecStart=/home/pi/startup.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+
+========================================
+sudo systemctl daemon-reload
+sudo systemctl enable startup.service
+
+
+#/home/pi/startup.sh#
+========================================
+
+#!/bin/bash
+
+SERVER_IP="192.168.x.x"
+SESSION="SEAL"
+
+PROGRAM_DIR="/home/pi/Desktop/imh"
+PROGRAM="SEALv18CM_timebased.py"
+
+# === Start new tmux session ===
+
+tmux new-session -d -s "$SESSION"
+
+# === Check network connection ===
+
+until ping -c 1 -W 2 "$SERVER_IP" >/dev/null 2>&1
+do
+    sudo systemctl restart zerotier-one
+    sleep 10
+done
+
+# === Execute python program ===
+
+tmux send-keys -t "$SESSION" "cd \"$PROGRAM_DIR\" && python3 -u \"$PROGRAM\"" C-m
+========================================
+
+sudo chmod 755 /home/pi/startup.sh
+sudo chown pi:pi /home/pi/startup.sh
+========================================
+
+# === Restart zerotier service without a password ===
+
+sudo visudo
+pi ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart zerotier-one
